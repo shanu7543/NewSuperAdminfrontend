@@ -1,17 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -34,9 +20,58 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+import { getUsers } from "apihelpers/api";
+import { useEffect, useState } from "react";
+import { getOrg } from "apihelpers/api";
+import { getVidychat } from "apihelpers/api";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
+  const [totalUsers, setTotalUsers] = useState({});
+  const [totalOrgs, setTotalOrgs] = useState({});
+  const [totalVidychat, setTotalVidychat] = useState({});
+
+  
+  const TotalUser = async () => {
+    try {
+      const data = await getUsers();
+      setTotalUsers(data);
+      console.log(data, "111");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    TotalUser();
+  }, []);
+
+  const TotalOrg = async () => {
+    try {
+      const data = await getOrg();
+      setTotalOrgs(data);
+      console.log(data, "111");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    TotalOrg();
+  }, []);
+
+  const TotalVidichat = async () => {
+    try {
+      const data = await getVidychat();
+      setTotalVidychat(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    TotalVidichat();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -48,8 +83,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
-                title="Bookings"
-                count={281}
+                title="Total Users"
+                count={totalUsers?.data?.count}
                 percentage={{
                   color: "success",
                   amount: "+55%",
@@ -62,8 +97,8 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
+                title="Total Organition"
+                count={totalOrgs?.data?.count}
                 percentage={{
                   color: "success",
                   amount: "+3%",
@@ -77,8 +112,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="success"
                 icon="store"
-                title="Revenue"
-                count="34k"
+                title="Total Vidychat"
+                count={totalVidychat?.data?.count}
                 percentage={{
                   color: "success",
                   amount: "+1%",
@@ -92,7 +127,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Total Intractions"
                 count="+91"
                 percentage={{
                   color: "success",
@@ -103,7 +138,7 @@ function Dashboard() {
             </MDBox>
           </Grid>
         </Grid>
-        <MDBox mt={4.5}>
+        {/* <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
@@ -153,7 +188,7 @@ function Dashboard() {
               <OrdersOverview />
             </Grid>
           </Grid>
-        </MDBox>
+        </MDBox> */}
       </MDBox>
       <Footer />
     </DashboardLayout>

@@ -1,22 +1,9 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -40,11 +27,31 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import {getLogin}  from "../../../../src/apihelpers/api";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
-
+  const [email,setEmail]=useState("")
+  const [password,setPassword]=useState("")
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const navigate = useNavigate()
+  const loginHandler = async (data) => {
+    const response = await getLogin({
+      email:email,
+      password:password,
+    });
+    console.log("You are loggedIn ")
+    if(response.success){
+    await  alert("Loggedin Sucessfully...")
+    setEmail("")
+    setPassword("")
+    navigate("/dashboard")
+    }
+    else{
+      alert("wrong credentials")
+    }
+  };
 
   return (
     <BasicLayout image={bgImage}>
@@ -63,7 +70,7 @@ function Basic() {
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Sign in
           </MDTypography>
-          <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
+          {/* <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
             <Grid item xs={2}>
               <MDTypography component={MuiLink} href="#" variant="body1" color="white">
                 <FacebookIcon color="inherit" />
@@ -79,15 +86,15 @@ function Basic() {
                 <GoogleIcon color="inherit" />
               </MDTypography>
             </Grid>
-          </Grid>
+          </Grid> */}
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput type="email" onChange={(e=>{setEmail(e.target.value)})} label="Email" fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput type="password" onChange={(e=>{setPassword(e.target.value)})} label="Password" fullWidth />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -101,23 +108,24 @@ function Basic() {
                 &nbsp;&nbsp;Remember me
               </MDTypography>
             </MDBox>
-            <MDBox mt={4} mb={1}>
+            <MDBox onClick={loginHandler} mt={4} mb={1}>
               <MDButton variant="gradient" color="info" fullWidth>
                 sign in
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
+                {/* Don&apos;t Reset Your Password?{" "} */}
+                Reset Your Password?
                 <MDTypography
                   component={Link}
-                  to="/authentication/sign-up"
+                  // to="/authentication/sign-up"
                   variant="button"
                   color="info"
                   fontWeight="medium"
                   textGradient
                 >
-                  Sign up
+                  Reset Password
                 </MDTypography>
               </MDTypography>
             </MDBox>
